@@ -68,7 +68,7 @@
         }
 
         if (errorText != "") {
-            createUser = false
+            creatingUser = false
             return
         }
 
