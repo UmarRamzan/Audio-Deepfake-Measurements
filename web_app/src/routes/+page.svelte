@@ -68,6 +68,7 @@
         }
 
         if (errorText != "") {
+            createUser = false
             return
         }
 
