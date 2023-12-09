@@ -31,12 +31,14 @@
     let errorText = ""
 
     let blobURL = ""
-
     let audioBlobs = []
+
+    let loadingAudio = false;
 
     let numbers = Array.from({ length: 30 }, (_, index) => index);
 
     let roundNum = 1;
+    let displayRoundNum = 1;
 
     function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -124,6 +126,7 @@
 
     async function playAudio(i) {
 
+        loadingAudio = true
         while (audioBlobs.length <= i) {
             await new Promise(r => setTimeout(r, 1000));
         }
@@ -134,9 +137,13 @@
         audio.src = blobURL
 
         startTime = performance.now()
+        loadingAudio = false
     }
 
     async function saveChoice(choice) {
+
+        if (loadingAudio) { return }
+        if (roundNum > 30) { return }
 
         endTime = performance.now()
         let time = endTime - startTime
@@ -181,15 +188,17 @@
 
     async function stepForward() {
 
-        if (roundNum == 30) {
+        roundNum += 1
+
+        if (roundNum > 30) {
             return
         }
 
         await playAudio(roundNum - 1)
 
-        roundNum += 1
+        displayRoundNum += 1
+
         audioId = audioData[numbers[roundNum - 1]]['audio_id']
-        
     }
 
     function isNumber(value) {
@@ -254,7 +263,7 @@
 <div style="width: 500px; margin: auto; margin-top: 10%;">
 
     <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 20px">
-        <p style="font-size: 30px;">Round: {roundNum}</p>
+        <p style="font-size: 30px;">Round: {displayRoundNum}</p>
     </div>
 
     <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
