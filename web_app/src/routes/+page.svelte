@@ -31,7 +31,8 @@
     let errorText = ""
 
     let blobURL = ""
-    let loadingAudio = false
+
+    let audioBlobs = []
 
     let numbers = Array.from({ length: 30 }, (_, index) => index);
 
@@ -76,8 +77,8 @@
         let respData = await resp.json()
         userId = respData['data'][0]['user_id']
 
-        getAudio(audioData[numbers[0]]['path'])
 		dialog.close()
+        playAudio(0)
     }
 
     async function getAudioData() {
@@ -95,8 +96,6 @@
 
     async function getAudio(path) {
 
-        loadingAudio = true
-
         const resp = await fetch('api/audio', {
             method: 'POST',
             body: JSON.stringify({ 
@@ -108,22 +107,33 @@
         let chunks = []
 
         const reader = resp.body.getReader();
-            reader.read().then(function pump({ done, value }) {
-            if (done) {
-
-                const blob = new Blob(chunks, { type: "audio/wav" });
-                blobURL = window.URL.createObjectURL(blob);
-
-                const audio = document.querySelector("audio")
-                audio.src = blobURL
-
-                loadingAudio = false
-                startTime = performance.now()
-                return;
+        await new Promise( (resolve, reject) => {
+            function pump({ done, value }) {
+                if (done) {
+                    const blob = new Blob(chunks, { type: "audio/wav" });
+                    audioBlobs.push(blob)
+                    resolve(blob);
+                    return;
+                }
+                chunks.push(value);
+                reader.read().then(pump);
             }
-            chunks.push(value);
-            return reader.read().then(pump);
-        }); 
+            reader.read().then(pump);
+        });
+    }
+
+    async function playAudio(i) {
+
+        while (audioBlobs.length <= i) {
+            await new Promise(r => setTimeout(r, 1000));
+        }
+
+        blobURL = window.URL.createObjectURL(audioBlobs[i]);
+
+        const audio = document.querySelector("audio")
+        audio.src = blobURL
+
+        startTime = performance.now()
     }
 
     async function saveChoice(choice) {
@@ -175,10 +185,11 @@
             return
         }
 
-        roundNum += 1
+        await playAudio(roundNum - 1)
 
+        roundNum += 1
         audioId = audioData[numbers[roundNum - 1]]['audio_id']
-        getAudio(audioData[numbers[roundNum - 1]]['path'])
+        
     }
 
     function isNumber(value) {
@@ -187,7 +198,11 @@
 
     onMount(async () => {
         audioData = await getAudioData()
-        audioId = audioData[numbers[0]]['audio_id']
+
+        for (let i in numbers) {
+            audioId = audioData[numbers[i]]['audio_id']
+            await getAudio(audioData[numbers[i]]['path'])
+        }
     })
 
 </script>
