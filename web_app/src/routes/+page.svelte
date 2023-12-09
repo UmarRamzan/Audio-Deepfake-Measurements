@@ -5,7 +5,7 @@
     import { scale, fade} from "svelte/transition";
     import { quintOut } from "svelte/easing";
 
-	let showModal = false;
+	let showModal = true;
 
     let dialog;
 
@@ -260,7 +260,7 @@
 	</div>
 </dialog>
 
-<div style="width: 500px; margin: auto; margin-top: 10%;">
+<div style="max-width: 500px; margin:auto; margin-top: 10%; padding: 0px 30px">
 
     <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 20px">
         <p style="font-size: 30px;">Round: {displayRoundNum}</p>
