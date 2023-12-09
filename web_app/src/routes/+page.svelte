@@ -234,7 +234,7 @@
 	<div on:click|stopPropagation>
 		<h2>Information</h2>
 		<hr />
-		<div style="width: 400px;">
+		<div style="max-width: 500px;">
             <div style="display: flex; justify-content: center; margin-top:15px">
                 <input type="number" min="1" max="100" class="form-control" placeholder="Age" bind:value={age} required>
             </div>
@@ -306,10 +306,8 @@
 <style>
     
     dialog {
-    max-width: 32em;
-    border-radius: 0.2em;
-    border: none;
-    padding: 0;
+    width: 500px;
+    border-radius: 0.4em;
 	}
 	dialog::backdrop {
 		background: rgba(0, 0, 0, 0.3);
