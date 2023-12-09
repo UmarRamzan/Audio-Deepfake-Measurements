@@ -188,7 +188,11 @@
             incorrect += 1
         }
 
-        accuracy = Math.round((correct / (correct + incorrect)) * 100)
+        if (correct + incorrect == 0) {
+            accuracy = 0
+        } else {
+            accuracy = Math.round((correct / (correct + incorrect)) * 100)
+        }
 
         fetch('api/audio', {
             method: 'POST',
