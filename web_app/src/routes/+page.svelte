@@ -34,6 +34,7 @@
     let audioBlobs = []
 
     let loadingAudio = false;
+    let savingChoice = false;
 
     let numbers = Array.from({ length: 30 }, (_, index) => index);
 
@@ -142,7 +143,6 @@
 
     async function playAudio(i) {
 
-        loadingAudio = true
         while (audioBlobs.length <= i) {
             await new Promise(r => setTimeout(r, 1000));
         }
@@ -153,10 +153,13 @@
         audio.src = blobURL
 
         startTime = performance.now()
-        loadingAudio = false
     }
 
     async function saveChoice(choice) {
+
+        if (savingChoice) { return }
+
+        savingChoice = true
 
         if (loadingAudio) { return }
         if (roundNum > 30) { return }
@@ -210,11 +213,15 @@
             return
         }
 
+        loadingAudio = true
+
         await playAudio(roundNum - 1)
 
         displayRoundNum += 1
-
         audioId = audioData[numbers[roundNum - 1]]['audio_id']
+
+        loadingAudio = false
+        savingChoice = false
     }
 
     function isNumber(value) {
