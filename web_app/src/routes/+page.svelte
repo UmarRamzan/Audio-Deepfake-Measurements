@@ -40,6 +40,8 @@
     let roundNum = 1;
     let displayRoundNum = 1;
 
+    let creatingUser = false;
+
     function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -50,6 +52,8 @@
     shuffleArray(numbers);
 
     async function createUser() {
+
+        creatingUser = true
 
         if (age == "" || age == null) {
             errorText = 'Please enter a value for age'
@@ -80,6 +84,17 @@
         userId = respData['data'][0]['user_id']
 
 		dialog.close()
+        creatingUser = false
+        reset()
+    }
+
+    function reset() {
+        roundNum = 1
+        displayRoundNum = 1
+        correct = 0
+        incorrect = 0
+        accuracy = 0
+        result = ""
         playAudio(0)
     }
 
@@ -234,7 +249,7 @@
 	<div on:click|stopPropagation>
 		<h2>Information</h2>
 		<hr />
-		<div style="max-width: 500px;">
+		<div style="max-width: 400px;">
             <div style="display: flex; justify-content: center; margin-top:15px">
                 <input type="number" min="1" max="100" class="form-control" placeholder="Age" bind:value={age} required>
             </div>
@@ -253,9 +268,15 @@
 
 		<hr />
 		<!-- svelte-ignore a11y-autofocus -->
-        <div style="display: flex; justify-content: end;">
-            <button type="button" class="btn btn-outline-primary" on:click={() => createUser()}>Proceed</button>
-        </div>
+        {#if !creatingUser}
+            <div style="display: flex; justify-content: end;">
+                <button type="button" class="btn btn-outline-primary" on:click={() => createUser()}>Proceed</button>
+            </div>
+        {:else}
+            <div style="display: flex; justify-content: end;">
+                <button type="button" class="btn btn-primary disabled" on:click={() => createUser()}>Proceed</button>
+            </div>
+        {/if}
         
 	</div>
 </dialog>
@@ -266,15 +287,21 @@
         <p style="font-size: 30px;">Round: {displayRoundNum}</p>
     </div>
 
+    {#if roundNum >= 31}
     <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-bar" style="width: {Math.floor(((roundNum)/30)*100)}%"></div>
+        <div class="progress-bar" style="width: 100%"></div>
     </div>
+    {:else}
+    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar bg-info" style="width: {Math.floor(((roundNum-1)/30)*100)}%"></div>
+    </div>
+    {/if}
       
 
     <hr>
     
     <div style="display: flex; justify-content: center; align-items:center; margin-top: 20px;">
-        <audio disabled controls autoplay/>
+        <audio disabled controls autoplay style="margin: 0px;"/>
     </div>
     
     <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 20px">
@@ -306,7 +333,7 @@
 <style>
     
     dialog {
-    width: 500px;
+    width: 400px;
     border-radius: 0.4em;
 	}
 	dialog::backdrop {
