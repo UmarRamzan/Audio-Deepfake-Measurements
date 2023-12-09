@@ -329,6 +329,17 @@
     </div>
 
     <hr>
+    {#if correct + incorrect == 0}
+        <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    {:else}
+        <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {accuracy}%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-danger" role="progressbar" style="width: {100-accuracy}%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    {/if}
+    
 
     <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 20px">
         {#if result == "correct"}
