@@ -147,8 +147,10 @@
             await new Promise(r => setTimeout(r, 1000));
         }
 
-        blobURL = window.URL.createObjectURL(audioBlobs[i]);
+        loadingAudio = false
+        await new Promise(r => setTimeout(r, 500))
 
+        blobURL = window.URL.createObjectURL(audioBlobs[i]);
         const audio = document.querySelector("audio")
         audio.src = blobURL
 
@@ -158,11 +160,10 @@
     async function saveChoice(choice) {
 
         if (savingChoice) { return }
-
-        savingChoice = true
-
         if (loadingAudio) { return }
         if (roundNum > 30) { return }
+
+        savingChoice = true
 
         endTime = performance.now()
         let time = endTime - startTime
@@ -189,7 +190,7 @@
 
         accuracy = Math.round((correct / (correct + incorrect)) * 100)
 
-        const resp = await fetch('api/audio', {
+        fetch('api/audio', {
             method: 'POST',
             body: JSON.stringify({ 
                 "request": "saveChoice",
@@ -202,7 +203,7 @@
             }),
         })
 
-        stepForward()
+        await stepForward()
     }
 
     async function stepForward() {
@@ -210,16 +211,18 @@
         roundNum += 1
 
         if (roundNum > 30) {
+            savingChoice = false
             return
         }
 
         loadingAudio = true
 
+        audioId = audioData[numbers[roundNum - 1]]['audio_id']
+
         await playAudio(roundNum - 1)
 
         displayRoundNum += 1
-        audioId = audioData[numbers[roundNum - 1]]['audio_id']
-
+        
         loadingAudio = false
         savingChoice = false
     }
@@ -231,8 +234,9 @@
     onMount(async () => {
         audioData = await getAudioData()
 
+        audioId = audioData[numbers[0]]['audio_id']
+
         for (let i in numbers) {
-            audioId = audioData[numbers[i]]['audio_id']
             await getAudio(audioData[numbers[i]]['path'])
         }
     })
@@ -309,7 +313,13 @@
     <hr>
     
     <div style="display: flex; justify-content: center; align-items:center; margin-top: 20px;">
+        {#if loadingAudio}
+            <div class="spinner-border text-dark" role="status">
+            </div>
+        {:else}
         <audio disabled controls autoplay style="margin: 0px;"/>
+        {/if}
+        
     </div>
     
     <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 20px">
