@@ -363,9 +363,11 @@
     
     </div>
 
+    {#if roundNum >= 31}
     <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 20px">
-        <a href="https://forms.gle/MymZXrFTV5rfQmXy8">Post Game Questionnaire</a>
+        <a style="font-style: italic;" href="https://forms.gle/MymZXrFTV5rfQmXy8">Post Game Questionnaire</a>
     </div>
+    {/if}
     
 </div>
 
