@@ -305,7 +305,7 @@
     </div>
 
     <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 0px">
-        <p style="font-size: 15px; font-style:italic">Classify each audio clip as either real or machine generated</p>
+        <p style="font-size: 15px; font-style:italic; text-align:center">Classify each audio clip as either real or machine generated</p>
     </div>
 
     {#if roundNum >= 31}
