@@ -5,7 +5,7 @@
     import { scale, fade} from "svelte/transition";
     import { quintOut } from "svelte/easing";
 
-	let showModal = true;
+	let showModal = false;
 
     let dialog;
 
@@ -302,6 +302,10 @@
 
     <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 20px">
         <p style="font-size: 30px;">Round: {displayRoundNum}</p>
+    </div>
+
+    <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 0px">
+        <p style="font-size: 15px; font-style:italic">Classify each audio clip as either real or machine generated</p>
     </div>
 
     {#if roundNum >= 31}
