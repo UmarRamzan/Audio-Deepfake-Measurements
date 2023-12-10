@@ -283,6 +283,7 @@
         </div>
 
 		<hr />
+        <p style="font-style:oblique; text-align:center">As part of a user study on human perceptions of audio deepfakes, you will be presented with a collection of real and machine generated (deepfake) audio clips and must classify them accordingly.</p>
 		<!-- svelte-ignore a11y-autofocus -->
         {#if !creatingUser}
             <div style="display: flex; justify-content: end;">
@@ -360,6 +361,10 @@
             <p style="font-style: italic;">Incorrect: {incorrect}</p>
         {/if}
     
+    </div>
+
+    <div style="display: flex; justify-content: center; column-gap: 10px; margin-top: 20px">
+        <a href="https://forms.gle/MymZXrFTV5rfQmXy8">Post Game Questionnaire</a>
     </div>
     
 </div>
