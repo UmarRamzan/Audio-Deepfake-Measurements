@@ -5,7 +5,7 @@
     import { scale, fade} from "svelte/transition";
     import { quintOut } from "svelte/easing";
 
-	let showModal = false;
+	let showModal = true;
 
     let dialog;
 
@@ -158,6 +158,8 @@
     }
 
     async function saveChoice(choice) {
+
+        if (userId == null) { showModal=true; return}
 
         if (savingChoice) { return }
         if (loadingAudio) { return }
