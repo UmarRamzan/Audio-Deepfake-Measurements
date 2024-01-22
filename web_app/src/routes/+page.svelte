@@ -286,6 +286,7 @@
 
 		<hr />
         <p style="font-style:oblique; text-align:center">As part of a user study on human perceptions of audio deepfakes, you will be presented with a collection of real and machine generated (deepfake) audio clips and must classify them accordingly.</p>
+		<hr />
 		<!-- svelte-ignore a11y-autofocus -->
         {#if !creatingUser}
             <div style="display: flex; justify-content: end;">
